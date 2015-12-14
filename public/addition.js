@@ -45,3 +45,34 @@ var AnimalCounts = React.createFactory(React.createClass({
 ReactDOM.render(
   AnimalCounts(),
   document.getElementById("container"));
+
+
+var solver = new c.SimplexSolver();
+var dogs = new c.Variable({name: "dogs"});
+var cats = new c.Variable({name: "cats"});
+var total = new c.Variable({name: "total"});
+
+// Ensure total = dogs + cats
+var sum = new c.Equation(total, c.plus(dogs, cats));
+solver.addConstraint(sum);
+
+// Let's try suggesting that we have 10 dogs.
+solver.addEditVar(dogs).suggestValue(dogs, 10).resolve();
+console.log("We now have", dogs.value, "dogs");
+console.log("Plus", cats.value, "cats");
+console.log("For a total of", total.value, "animals");
+
+/*
+We now have 10 dogs
+Plus -10 cats
+For a total of 0 animals
+
+Whoops! That's mathematically true, but not very useful.
+With constraint systems, you often have to spell out lots of things you take for granted.
+
+In the next commit, we'll add some rules to keep the variables within reasonable ranges.
+*/
+
+
+
+

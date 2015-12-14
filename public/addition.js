@@ -1,6 +1,6 @@
 var NumberInput = React.createFactory(React.createClass({
   handleChange: function(e){
-    this.props.onChange(this.props.name, e.target.value);
+    this.props.onChange(this.props.name, parseInt(e.target.value));
   },
   render: function(){
     return React.DOM.div({},
@@ -19,8 +19,18 @@ var AnimalCounts = React.createFactory(React.createClass({
     };
   },
   handleChange: function(name, value){
-    var stateChange = []
+    var stateChange = [], total;
     stateChange[name] = value;
+    if(name == "dogs"){
+      total = value + this.state.cats;
+    } else if(name == "cats"){
+      total = value + this.state.dogs;
+    } else {
+      // we're changing the total, what to do?
+    }
+    if(total) {
+      stateChange.total = total;
+    }
     this.setState(stateChange);
   },
   render: function(){

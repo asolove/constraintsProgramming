@@ -1,7 +1,7 @@
 var NumberInput = React.createFactory(React.createClass({
   render: function(){
     return React.DOM.div({},
-      React.DOM.input({type: "range", min: 0, max: 10, valie: this.props.value}),
+      React.DOM.input({type: "range", min: 0, max: 10, value: this.props.value}),
       React.DOM.span(null, this.props.value + " " + this.props.name)
     );
   }

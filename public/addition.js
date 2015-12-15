@@ -12,26 +12,17 @@ var NumberInput = React.createFactory(React.createClass({
 
 var AnimalCounts = React.createFactory(React.createClass({
   getInitialState: function(){
-    return {
-      dogs: 2,
-      cats: 3,
-      total: 5
-    };
+    var model = new AnimalModel();
+    model.suggest("dogs", 2);
+    model.suggest("cats", 3);
+
+    var state = model.values();
+    state.model = model;
+    return state;
   },
   handleChange: function(name, value){
-    var stateChange = [], total;
-    stateChange[name] = value;
-    if(name == "dogs"){
-      total = value + this.state.cats;
-    } else if(name == "cats"){
-      total = value + this.state.dogs;
-    } else {
-      // we're changing the total, what to do?
-    }
-    if(total) {
-      stateChange.total = total;
-    }
-    this.setState(stateChange);
+    this.state.model.suggest(name, value);
+    this.setState(this.state.model.values());
   },
   render: function(){
     return React.DOM.div(null,

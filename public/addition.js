@@ -46,34 +46,40 @@ ReactDOM.render(
   AnimalCounts(),
   document.getElementById("container"));
 
+var AnimalModel = function() {
+  this.solver = new c.SimplexSolver();
+  this.dogs = new c.Variable({name: "dogs"});
+  this.cats = new c.Variable({name: "cats"});
+  this.total = new c.Variable({name: "total"});
 
-var solver = new c.SimplexSolver();
-var dogs = new c.Variable({name: "dogs"});
-var cats = new c.Variable({name: "cats"});
-var total = new c.Variable({name: "total"});
+  // Ensure all variables are non-negative
+  this.solver.addConstraint(new c.Inequality(this.dogs, c.GEQ, 0));
+  this.solver.addConstraint(new c.Inequality(this.cats, c.GEQ, 0));
 
-// Ensure all variables are non-negative
-solver.addConstraint(new c.Inequality(dogs, c.GEQ, 0));
-solver.addConstraint(new c.Inequality(cats, c.GEQ, 0));
+  // Ensure total = dogs + cats
+  var sum = new c.Equation(this.total, c.plus(this.dogs, this.cats));
+  this.solver.addConstraint(sum);
+};
 
-// Ensure total = dogs + cats
-var sum = new c.Equation(total, c.plus(dogs, cats));
-solver.addConstraint(sum);
+AnimalModel.prototype.values = function() {
+  return {
+    dogs: this.dogs.value,
+    cats: this.cats.value,
+    total: this.total.value
+  };
+};
 
-// Let's try suggesting that we have 10 dogs.
-solver.addEditVar(dogs).suggestValue(dogs, 10).resolve();
-console.log("We now have", dogs.value, "dogs");
-console.log("Plus", cats.value, "cats");
-console.log("For a total of", total.value, "animals");
+AnimalModel.prototype.suggest = function(name, value){
+  var variable = this[name]
+  this.solver.addEditVar(variable).suggestValue(variable, value).resolve();
+};
 
-/*
-We now have 10 dogs
-Plus 0 cats
-For a total of 10 animals
-
-Alright, now that seems reasonable.
-*/
-
-
+var model = new AnimalModel();
+model.suggest("dogs", 10);
+console.log(model.values()); // {dogs: 10, cats: 0, total: 10}
+model.suggest("cats", 20);
+console.log(model.values()); // {dogs: 10, cats: 20, total: 30}
+model.suggest("total", 10);
+console.log(model.values()); // {dogs: 10, cats: 0, total: 10}
 
 

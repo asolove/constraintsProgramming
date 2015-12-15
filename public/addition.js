@@ -46,6 +46,8 @@ var AnimalModel = function() {
   // Ensure total = dogs + cats
   var sum = new c.Equation(this.total, c.plus(this.dogs, this.cats));
   this.solver.addConstraint(sum);
+
+  this.weight = 1;
 };
 
 AnimalModel.prototype.values = function() {
@@ -59,7 +61,7 @@ AnimalModel.prototype.values = function() {
 AnimalModel.prototype.suggest = function(name, value){
   var variable = this[name]
   if(variable != this.lastEdited){
-    this.solver.addEditVar(variable);
+    this.solver.addEditVar(variable, c.Strength.strong, this.weight++);
     this.lastEdited = variable;
   }
   this.solver.suggestValue(variable, value).resolve();

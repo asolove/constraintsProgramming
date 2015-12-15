@@ -58,7 +58,11 @@ AnimalModel.prototype.values = function() {
 
 AnimalModel.prototype.suggest = function(name, value){
   var variable = this[name]
-  this.solver.addEditVar(variable).suggestValue(variable, value).resolve();
+  if(variable != this.lastEdited){
+    this.solver.addEditVar(variable);
+    this.lastEdited = variable;
+  }
+  this.solver.suggestValue(variable, value).resolve();
 };
 
 

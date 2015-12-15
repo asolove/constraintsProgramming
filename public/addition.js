@@ -40,11 +40,7 @@ var AnimalCounts = React.createFactory(React.createClass({
       NumberInput({name: "total", value: this.state.total, onChange: this.handleChange})
     );
   }
-}))
-
-ReactDOM.render(
-  AnimalCounts(),
-  document.getElementById("container"));
+}));
 
 var AnimalModel = function() {
   this.solver = new c.SimplexSolver();
@@ -74,12 +70,7 @@ AnimalModel.prototype.suggest = function(name, value){
   this.solver.addEditVar(variable).suggestValue(variable, value).resolve();
 };
 
-var model = new AnimalModel();
-model.suggest("dogs", 10);
-console.log(model.values()); // {dogs: 10, cats: 0, total: 10}
-model.suggest("cats", 20);
-console.log(model.values()); // {dogs: 10, cats: 20, total: 30}
-model.suggest("total", 10);
-console.log(model.values()); // {dogs: 10, cats: 0, total: 10}
 
-
+ReactDOM.render(
+  AnimalCounts(),
+  document.getElementById("container"));
